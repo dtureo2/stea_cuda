@@ -93,28 +93,6 @@ int main(){
         return EXIT_FAILURE;
     }
 	
-//	exit(2);
-/*
-	printf("\n \t Encriptando...\n");
-	keya.k0 = key[0];
-	keya.k1 = key[1];
-	t1 = clock();
-	for(j = 0; j < count; j++){
-		//printf("Run %i... ", j);
-		
-		for (i = 0; i < DATASIZE; i++){
-			host_databuffer[i].m0 = pt[j][0];
-            host_databuffer[i].m1 = pt[j][1];
-        }
-		
-        if (!gpu_stea((uchar*)host_databuffer, DATASIZE*sizeof(STEA_BLOCK), (uchar*)host_databuffer, keya, 0)){
-            printf("ERROR en teancrypt()\n");
-            break;
-        }
-		
-	}
-	t1 = (clock()-t1)/CLOCKS_PER_SEC;
-*/
 	printf(" \nt1 enc: %.15f \t t2 PT: %.15f \n", t1, t2);
 	times = fopen(TIMES,"a");
 	if (! times) {
@@ -213,9 +191,6 @@ void gpu_plaintexts(){
 		return;
 	}
 	cudaMemcpy(pt, gpu_pt, sizeof(ulong) * transfer_size, cudaMemcpyDeviceToHost);
-/*	for(ulong i = 0x0; i < num_pt; i++){
-		printf("test(%d): %08lX %08lX\n", (int)i, pt[i][0], pt[i][1]);
-	}*/
 	cudaFree(gpu_pt);
 	printf("Creados %d textos en claro\n\n", (int)num_pt);
 }
@@ -233,23 +208,6 @@ __global__ void cuda_plaintext( ulong cu_pt[NUMPT][2], ulong Cantidad){
 	for(uint pos = k; pos < Cantidad; pos += threadN){
 		cu_pt[pos][1] = pos;
 	}
-/*	ulong i = blockIdx.x * blockDim.x + threadIdx.x;
-	//ulong y = blockIdx.y * blockDim.y + threadIdx.y;
-	ulong y;
-	ulong k = i; //posiblemente k haya que declaralo como variable global dentro de la GPU
-	__shared__ ulong N ;
-	__shared__ ulong cero;
-	N = Cantidad;
-	cero = 0;
-	cu_pt[k][0] = cero;
-	 __syncthreads();
-	if( i < N){	
-		for(y = 0; y < k; y++){
-			cu_pt[k][1] = y;
-			 __syncthreads();
-		}
-	}
-*/
 }
 
 // Se encarga de crear los plaintexts que diga NUMPT
@@ -290,4 +248,3 @@ void test_cuda(){
     }
     return;
 }
-
